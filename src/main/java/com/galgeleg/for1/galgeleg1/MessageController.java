@@ -1,15 +1,16 @@
 package com.galgeleg.for1.galgeleg1;
 
+import brugerautorisation.data.Bruger;
+import brugerautorisation.transport.rmi.Brugeradmin;
 import galgeleg.GalgelegInterface;
-import galgeleg.Galgelogik;
+import kong.unirest.json.JSONException;
+import kong.unirest.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -48,6 +49,25 @@ public class MessageController {
         return new Game(logik.getSynligtOrd(), logik.getAntalForkerteBogstaver(),
                 logik.getBrugteBogstaver(), logik.erSpilletSlut()
                 , "Du gættede på " + guess, logik.erSpilletVundet());
+    }
+
+    @PostMapping("/login")
+    public boolean login(@RequestBody String studienummer) throws Exception {
+        System.out.println(studienummer);
+        JSONObject json = new JSONObject(studienummer);
+        System.out.println(json);
+        System.out.println(json.getString("user"));
+        System.out.println(json.getString("pass"));
+        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        try {
+            Bruger nytLogin = brugeradmin.hentBruger(json.getString("user"), json.getString("pass"));
+            System.out.println(nytLogin.email);
+            return true;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Login not authorized");
+        }
+        return false;
+
     }
 
 }

@@ -1,14 +1,11 @@
 package galgeleg;
 
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 
-import brugerautorisation.transport.Brugeradmin;
+import brugerautorisation.transport.rmi.Brugeradmin;
 
 //import kong.unirest.Unirest;
 //import kong.unirest.HttpResponse;

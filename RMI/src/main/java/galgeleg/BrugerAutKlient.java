@@ -1,6 +1,6 @@
 package galgeleg;
 
-import brugerautorisation.transport.Brugeradmin;
+import brugerautorisation.transport.rmi.Brugeradmin;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;

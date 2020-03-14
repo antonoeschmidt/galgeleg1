@@ -1,4 +1,4 @@
-package brugerautorisation.transport;
+package brugerautorisation.transport.rmi;
 
 import brugerautorisation.data.Bruger;
 
