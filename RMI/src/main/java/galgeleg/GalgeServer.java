@@ -16,7 +16,6 @@ public class GalgeServer {
         GalgelegInterface glI = new galgeleg.Galgelogik();
         Naming.rebind("rmi://dist.saluton.dk:23011/galgeleg", glI);
         System.out.println("Galgeservice registreret. hej2");
-
          */
     }
 }
