@@ -52,9 +52,9 @@ public class MessageController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody String studienummer) throws Exception {
-        System.out.println(studienummer);
-        JSONObject json = new JSONObject(studienummer);
+    public boolean login(@RequestBody String login) throws Exception {
+        System.out.println(login);
+        JSONObject json = new JSONObject(login);
         System.out.println(json);
         System.out.println(json.getString("user"));
         System.out.println(json.getString("pass"));

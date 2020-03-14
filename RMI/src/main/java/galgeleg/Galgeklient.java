@@ -1,73 +1,68 @@
 package galgeleg;
 
-import java.rmi.Naming;
-import java.rmi.RemoteException;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.json.JSONObject;
+
 import java.util.Scanner;
-
-
-import brugerautorisation.transport.rmi.Brugeradmin;
-
-//import kong.unirest.Unirest;
-//import kong.unirest.HttpResponse;
-//import kong.unirest.json.JSONObject;
 
 
 public class Galgeklient {
     public static void main(String[] args) throws Exception {
-
-
-        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        HttpResponse response;
+        JSONObject game;
+        JSONObject status;
         Scanner scan = new Scanner(System.in);
-        System.out.println("Indtast studienummer: ");
-        String studienummer = scan.nextLine();
-        System.out.println("Indtast kode: ");
-        String kode = scan.nextLine();
-        brugeradmin.hentBruger(studienummer,kode);
+        boolean playAgain = true;
+        boolean loggedIn = false;
 
-//        GalgelegInterface glI = (GalgelegInterface) Naming.lookup("rmi://localhost:1099/galgeservice");
-//        //GalgelegInterface glI =(GalgelegInterface) Naming.lookup("rmi://dist.saluton.dk:23699/kontotjeneste");
-//        glI.nulstil();
-//        Scanner scan = new Scanner(System.in);
-//
-//        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-//        System.out.println("Indtast studienummer: ");
-//        String studienummer = scan.nextLine();
-//        System.out.println("Indtast kode: ");
-//        String kode = scan.nextLine();
-//
-//        brugeradmin.hentBruger(studienummer,kode);
-//
-//
-//        if (glI.login(studienummer, kode)) {
-//            System.out.println("suck");
-//        }
-        /*
-        try {
-            brugeradmin.hentBruger(studienummer,kode);
-            System.out.println("Login autoriseret");
-            runGalgeleg(glI, scan);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Forkert brugernavn eller adgangskode. Spillet lukkes.");
-        }
+        do {
+            System.out.println("--- Please enter username ---");
+            String usrName = scan.next();
 
-         */
+            System.out.println("--- Please enter password ---");
+            String usrPass = scan.next();
+            response = Unirest.post("http://localhost:8080/login").body("{\"user\":\"" + usrName +"\",\"pass\":\"" + usrPass +"\"}").asString();
+            if (response.getBody().toString().equals("true")) {
+                loggedIn = true;
+            }
+
+        } while (!loggedIn);
+
+        do {
+            System.out.println("-- Welcome to this gallowgame --");
+
+            game = Unirest.get("http://localhost:8080/newgame").asJson().getBody().getObject();
+            System.out.println(game);
+
+            do {
+                System.out.println("--- New round --- \n");
+                System.out.println("Guess a letter\n");
+                String guess = scan.next().trim().toLowerCase();
+
+                response = Unirest.post("http://localhost:8080/guess").body(guess).asJson();
+
+                status = new JSONObject(String.valueOf(response.getBody()));
+                status(status);
+
+            } while(!status.getBoolean("gameOver"));
+
+            System.out.println(status.getBoolean("gameIsWon") ? "You won!" : "You lost");
 
 
-    }
+            System.out.println("wanna play again? Press \"0\" for no, \"1\" for yes");
 
-    private static void runGalgeleg(GalgelegInterface glI, Scanner scan) throws RemoteException {
-        System.out.println("dude");
-        glI.nulstil();
-        System.out.println("-- Galgeleg starter --");
+            if(scan.nextInt() == 0) {
+                playAgain = false;
+            }
 
-        while (!glI.erSpilletSlut()) {
-            System.out.println("Gæt et bogstav: ");
-            glI.gætBogstav(scan.nextLine());
-            System.out.println(glI.getSynligtOrd());
-            System.out.println(7 - glI.getAntalForkerteBogstaver() + " liv tilbage");
-        }
-        System.out.println(glI.erSpilletVundet() ? "Tillykke du vandt!" : "Du tabte desværre. Ordet du prøvede at gætte var: " + glI.getOrdet());
+        } while (playAgain);
     }
 
 
+
+    private static void status(JSONObject status) {
+        System.out.println("Word: " + status.get("visibleWord") + " Letters used: " + status.get("usedLetters")
+                + " lives used: " + status.get("lives"));
+    }
 }
