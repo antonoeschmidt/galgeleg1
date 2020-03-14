@@ -31,7 +31,8 @@ public class MessageController {
         getInfo();
         System.out.println(logik.erSpilletSlut());
         return new Game(logik.getSynligtOrd(), logik.getAntalForkerteBogstaver(),
-                logik.getBrugteBogstaver(), logik.erSpilletSlut(), "-- Nyt spil er startet --");
+                logik.getBrugteBogstaver(), logik.erSpilletSlut(), "-- Nyt spil er startet --",
+                logik.erSpilletVundet());
     }
 
     @GetMapping("/greeting")
@@ -45,7 +46,8 @@ public class MessageController {
         System.out.println(guess);
         logik.gætBogstav(guess);
         return new Game(logik.getSynligtOrd(), logik.getAntalForkerteBogstaver(),
-                logik.getBrugteBogstaver(), logik.erSpilletSlut(), "Du gættede på " + guess);
+                logik.getBrugteBogstaver(), logik.erSpilletSlut()
+                , "Du gættede på " + guess, logik.erSpilletVundet());
     }
 
 }

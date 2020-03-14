@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 
@@ -17,7 +18,14 @@ import brugerautorisation.transport.Brugeradmin;
 public class Galgeklient {
     public static void main(String[] args) throws Exception {
 
-        brugerAut();
+
+        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Indtast studienummer: ");
+        String studienummer = scan.nextLine();
+        System.out.println("Indtast kode: ");
+        String kode = scan.nextLine();
+        brugeradmin.hentBruger(studienummer,kode);
 
 //        GalgelegInterface glI = (GalgelegInterface) Naming.lookup("rmi://localhost:1099/galgeservice");
 //        //GalgelegInterface glI =(GalgelegInterface) Naming.lookup("rmi://dist.saluton.dk:23699/kontotjeneste");
@@ -62,17 +70,6 @@ public class Galgeklient {
             System.out.println(7 - glI.getAntalForkerteBogstaver() + " liv tilbage");
         }
         System.out.println(glI.erSpilletVundet() ? "Tillykke du vandt!" : "Du tabte desværre. Ordet du prøvede at gætte var: " + glI.getOrdet());
-    }
-
-    public static void brugerAut() throws RemoteException, NotBoundException, MalformedURLException {
-        Brugeradmin brugeradmin = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Indtast studienummer: ");
-        String studienummer = scan.nextLine();
-        System.out.println("Indtast kode: ");
-        String kode = scan.nextLine();
-        brugeradmin.hentBruger(studienummer,kode);
-
     }
 
 

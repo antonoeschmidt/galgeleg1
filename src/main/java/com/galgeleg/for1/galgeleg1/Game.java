@@ -8,13 +8,16 @@ public class Game {
     private int lives;
     private boolean isGameOver;
     private String statusMsg;
+    private boolean gameIsWon;
 
-    public Game(String visibleWord, int lives, ArrayList<String> usedLetters, boolean isGameOver, String statusMsg) {
+    public Game(String visibleWord, int lives, ArrayList<String> usedLetters,
+                boolean isGameOver, String statusMsg, boolean gameIsWon) {
         this.visibleWord = visibleWord;
         this.lives = lives;
         this.usedLetters = usedLetters;
         this.isGameOver = isGameOver;
         this.statusMsg = statusMsg;
+        this.gameIsWon = gameIsWon;
     }
 
     public String getVisibleWord() {
@@ -55,5 +58,13 @@ public class Game {
 
     public void setStatusMsg(String statusMsg) {
         this.statusMsg = statusMsg;
+    }
+
+    public boolean isGameIsWon() {
+        return gameIsWon;
+    }
+
+    public void setGameIsWon(boolean gameIsWon) {
+        this.gameIsWon = gameIsWon;
     }
 }
