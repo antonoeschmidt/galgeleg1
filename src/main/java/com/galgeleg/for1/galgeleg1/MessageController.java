@@ -36,12 +36,6 @@ public class MessageController {
                 logik.erSpilletVundet());
     }
 
-    @GetMapping("/greeting")
-    public Message msg(@RequestParam(value = "name", defaultValue = "World") String name) {
-        System.out.println(name);
-        return new Message(counter.incrementAndGet(), String.format(template, name), "qwe");
-    }
-
     @PostMapping("/guess")
     public Game guessLetter(@RequestBody String guess) throws RemoteException {
         System.out.println(guess);
